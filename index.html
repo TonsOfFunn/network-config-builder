@@ -236,12 +236,93 @@ const vendors = {
 };
 
 const features = {
+    backup_tftp: {
+        label: 'Backup Config to TFTP Server',
+        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        fields: [
+            { id: 'tftpIp', label: 'TFTP Server IP', type: 'text', default: '10.2.1.249' }
+        ]
+    },
+    banner_motd: {
+        label: 'Banner MOTD',
+        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        fields: [
+            { id: 'bannerText', label: 'Banner Text (use quotes in value)', type: 'text', default: '*** UNAUTHORIZED ACCESS PROHIBITED ***' }
+        ]
+    },
+    enable_mode: {
+        label: 'Enable Secret / Password Encryption',
+        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        fields: [
+            { id: 'enableSecret', label: 'Enable Secret', type: 'text', default: 'cisco' }
+        ]
+    },
+    line_console: {
+        label: 'Line Console 0',
+        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        fields: [
+            { id: 'password', label: 'Console Password', type: 'text', default: 'cisco' }
+        ]
+    },
+    line_aux: {
+        label: 'Line AUX 0',
+        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        fields: [
+            { id: 'password', label: 'AUX Password', type: 'text', default: 'cisco' }
+        ]
+    },
+    line_vty: {
+        label: 'Line VTY 0-4',
+        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        fields: [
+            { id: 'vtyRange', label: 'VTY Range (e.g. 0 4 or 0 15)', type: 'text', default: '0 4' },
+            { id: 'loginMethod', label: 'Login (local or password)', type: 'text', default: 'local' }
+        ]
+    },
+    username: {
+        label: 'Username (Local User)',
+        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        fields: [
+            { id: 'username', label: 'Username', type: 'text', default: 'cisco' },
+            { id: 'secret', label: 'Secret/Password', type: 'text', default: 'cisco' }
+        ]
+    },
+    ssh_config: {
+        label: 'SSH (Hostname, Domain, RSA, VTY)',
+        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        fields: [
+            { id: 'hostname', label: 'Hostname', type: 'text', default: 'sw01' },
+            { id: 'domainName', label: 'IP Domain Name', type: 'text', default: 'mis351.net' },
+            { id: 'rsaBits', label: 'RSA Key Size (e.g. 1024)', type: 'number', default: '1024' }
+        ]
+    },
+    switch_security_ssh: {
+        label: 'Switch Security with SSH (Full)',
+        allowed: { cisco: ['Switch'], juniper: [] },
+        fields: [
+            { id: 'hostname', label: 'Hostname', type: 'text', default: 'Switch_Access_2' },
+            { id: 'domainName', label: 'Domain Name', type: 'text', default: 'mis451-8.net' },
+            { id: 'username', label: 'Username', type: 'text', default: 'cisco' },
+            { id: 'secret', label: 'User Secret', type: 'text', default: 'cisco' },
+            { id: 'enableSecret', label: 'Enable Secret', type: 'text', default: 'cisco' },
+            { id: 'consolePassword', label: 'Console Password', type: 'text', default: 'cisco' },
+            { id: 'bannerText', label: 'Banner MOTD', type: 'text', default: '*** UNAUTHORIZED ACCESS PROHIBITED ***' }
+        ]
+    },
     vlan: {
         label: 'VLANs',
         allowed: { cisco: ['Switch'], juniper: ['Switch'] },
         fields: [
             { id: 'vlanId', label: 'VLAN ID', type: 'number', default: '10' },
-            { id: 'vlanName', label: 'VLAN Name', type: 'text', default: 'DATA_VLAN' }
+            { id: 'vlanName', label: 'VLAN Name', type: 'text', default: 'VLAN_10' },
+            { id: 'accessPorts', label: 'Access Ports (e.g. fastethernet 0/13 - 14)', type: 'text', default: 'fastethernet 0/13 - 14' }
+        ]
+    },
+    vlan_trunking: {
+        label: 'VLAN Trunking',
+        allowed: { cisco: ['Switch'], juniper: [] },
+        fields: [
+            { id: 'interface', label: 'Trunk Interface', type: 'text', default: 'gigabitEthernet 0/1' }
         ]
     },
     stp: {
@@ -254,15 +335,96 @@ const features = {
             { id: 'interface', label: 'Interface (Juniper)', type: 'text', default: 'ge-0/0/0' }
         ]
     },
+    stp_root_primary: {
+        label: 'STP Root Bridge Primary',
+        allowed: { cisco: ['Switch'], juniper: [] },
+        fields: [
+            { id: 'vlanId', label: 'VLAN ID', type: 'number', default: '1' }
+        ]
+    },
+    stp_root_secondary: {
+        label: 'STP Root Bridge Secondary',
+        allowed: { cisco: ['Switch'], juniper: [] },
+        fields: [
+            { id: 'vlanId', label: 'VLAN ID', type: 'number', default: '1' }
+        ]
+    },
     portfast_bpdu: {
-        label: 'Portfast & BPDUGuard',
+        label: 'Portfast & BPDUGuard (Interface)',
         allowed: { cisco: ['Switch'], juniper: ['Switch'] },
         fields: [
-            { id: 'interface', label: 'Interface', type: 'text', default: 'GigabitEthernet1/0/1' }
+            { id: 'interface', label: 'Interface or Range', type: 'text', default: 'fa0/1-2' }
+        ]
+    },
+    enable_global_portfast_bpdu: {
+        label: 'Enable Global Portfast BPDUGuard',
+        allowed: { cisco: ['Switch'], juniper: [] },
+        fields: []
+    },
+    enable_interface_portfast_bpdu: {
+        label: 'Enable Interface Portfast BPDUGuard',
+        allowed: { cisco: ['Switch'], juniper: [] },
+        fields: [
+            { id: 'interface', label: 'Interface Range', type: 'text', default: 'fa0/1-2' }
+        ]
+    },
+    port_security: {
+        label: 'Port-Security',
+        allowed: { cisco: ['Switch'], juniper: [] },
+        fields: [
+            { id: 'interface', label: 'Interface Range', type: 'text', default: 'fa0/1 - 2' }
+        ]
+    },
+    lacp_etherchannel: {
+        label: 'LACP EtherChannel',
+        allowed: { cisco: ['Switch'], juniper: [] },
+        fields: [
+            { id: 'interfaceRange', label: 'Interface Range', type: 'text', default: 'g0/1 - 2' },
+            { id: 'channelGroup', label: 'Channel Group Number', type: 'number', default: '1' },
+            { id: 'mode', label: 'Mode (active or passive)', type: 'text', default: 'active' }
+        ]
+    },
+    standard_acl: {
+        label: 'Standard IP ACLs',
+        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        fields: [
+            { id: 'aclNum', label: 'ACL Number (1-99)', type: 'number', default: '1' },
+            { id: 'action1', label: 'Rule 1 (permit/deny)', type: 'text', default: 'permit' },
+            { id: 'source1', label: 'Source (e.g. 10.1.1.1 or 10.1.1.0 0.0.0.255)', type: 'text', default: '10.1.1.1' },
+            { id: 'applyInterface', label: 'Apply to Interface', type: 'text', default: 's0/0/1' },
+            { id: 'direction', label: 'Direction (in/out)', type: 'text', default: 'in' }
+        ]
+    },
+    extended_acl: {
+        label: 'Extended IP ACLs',
+        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        fields: [
+            { id: 'aclNum', label: 'ACL Number (100-199)', type: 'number', default: '103' },
+            { id: 'rule1', label: 'Rule 1: deny|permit protocol source dest', type: 'text', default: 'deny ip 10.0.0.0 0.255.255.255 192.168.100.0 0.0.0.63' },
+            { id: 'rule2', label: 'Rule 2 (optional)', type: 'text', default: 'permit ip any any' },
+            { id: 'applyInterface', label: 'Apply to Interface', type: 'text', default: 'g0/0' },
+            { id: 'direction', label: 'Direction (in/out)', type: 'text', default: 'out' }
+        ]
+    },
+    insert_ext_acl: {
+        label: 'Insert Extended ACL Entry',
+        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        fields: [
+            { id: 'aclNum', label: 'Extended ACL Number', type: 'number', default: '103' },
+            { id: 'seq', label: 'Sequence Number', type: 'number', default: '15' },
+            { id: 'entry', label: 'Entry (e.g. deny udp 10.1.0.0 0.0.1.159 host 10.2.1.249 eq tftp)', type: 'text', default: 'deny udp 10.1.0.0 0.0.1.159 host 10.2.1.249 eq tftp' }
+        ]
+    },
+    delete_ext_acl: {
+        label: 'Delete Extended ACL Entry',
+        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        fields: [
+            { id: 'aclNum', label: 'Extended ACL Number', type: 'number', default: '103' },
+            { id: 'seq', label: 'Sequence Number to Remove', type: 'number', default: '20' }
         ]
     },
     acl: {
-        label: 'Access Control Lists (ACL)',
+        label: 'Named ACL (Extended)',
         allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'aclName', label: 'ACL Name', type: 'text', default: 'BLOCK_SSH' },
@@ -276,11 +438,13 @@ const features = {
         label: 'DHCP Server',
         allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
-            { id: 'poolName', label: 'Pool Name', type: 'text', default: 'OFFICE_POOL' },
-            { id: 'network', label: 'Network', type: 'text', default: '192.168.10.0' },
-            { id: 'mask', label: 'Subnet Mask / Prefix', type: 'text', default: '255.255.255.0' },
-            { id: 'gateway', label: 'Default Gateway', type: 'text', default: '192.168.10.1' },
-            { id: 'dns', label: 'DNS Server', type: 'text', default: '8.8.8.8' }
+            { id: 'poolName', label: 'Pool Name', type: 'text', default: 'subnet-left' },
+            { id: 'network', label: 'Network', type: 'text', default: '172.16.1.0' },
+            { id: 'mask', label: 'Subnet Mask', type: 'text', default: '255.255.255.0' },
+            { id: 'gateway', label: 'Default Router', type: 'text', default: '172.16.1.1' },
+            { id: 'dns', label: 'DNS Server', type: 'text', default: '172.16.1.12' },
+            { id: 'excludedStart', label: 'Excluded Address Start (optional)', type: 'text', default: '' },
+            { id: 'excludedEnd', label: 'Excluded Address End (optional)', type: 'text', default: '' }
         ]
     },
     static_route_v4: {
@@ -300,35 +464,109 @@ const features = {
             { id: 'nexthop', label: 'Next Hop IPv6', type: 'text', default: '2001:db8::1' }
         ]
     },
+    loopback: {
+        label: 'Loopback Address',
+        allowed: { cisco: ['Router'], juniper: [] },
+        fields: [
+            { id: 'loopbackNum', label: 'Loopback Number', type: 'number', default: '0' },
+            { id: 'ipAddress', label: 'IP Address', type: 'text', default: '10.1.254.248' },
+            { id: 'mask', label: 'Subnet Mask', type: 'text', default: '255.255.255.252' },
+            { id: 'description', label: 'Description (optional)', type: 'text', default: 'Management' }
+        ]
+    },
+    ospf: {
+        label: 'OSPF',
+        allowed: { cisco: ['Router'], juniper: [] },
+        fields: [
+            { id: 'processId', label: 'OSPF Process ID', type: 'number', default: '1' },
+            { id: 'network', label: 'Network Address', type: 'text', default: '172.16.0.0' },
+            { id: 'wildcard', label: 'Wildcard Mask', type: 'text', default: '0.0.0.255' },
+            { id: 'area', label: 'Area', type: 'number', default: '0' }
+        ]
+    },
+    ripv2: {
+        label: 'RIPv2',
+        allowed: { cisco: ['Router'], juniper: [] },
+        fields: [
+            { id: 'networks', label: 'Networks (space-separated, e.g. 172.16.0.0 10.1.1.0)', type: 'text', default: '172.16.0.0' }
+        ]
+    },
+    enable_ipv6_unicast: {
+        label: 'Enable IPv6 Unicast Routing',
+        allowed: { cisco: ['Router'], juniper: [] },
+        fields: []
+    },
+    ipv6_ospfv3: {
+        label: 'IPv6 OSPFv3',
+        allowed: { cisco: ['Router'], juniper: [] },
+        fields: [
+            { id: 'processId', label: 'OSPFv3 Process ID', type: 'number', default: '1' },
+            { id: 'routerId', label: 'Router ID', type: 'text', default: '1.1.1.1' },
+            { id: 'interface', label: 'Interface', type: 'text', default: 'gi0/0' },
+            { id: 'area', label: 'Area', type: 'number', default: '0' }
+        ]
+    },
+    roas: {
+        label: 'Router on a Stick (ROAS)',
+        allowed: { cisco: ['Router'], juniper: [] },
+        fields: [
+            { id: 'subInt', label: 'Sub-interface (e.g. g0/1.10)', type: 'text', default: 'g0/1.10' },
+            { id: 'vlanId', label: 'VLAN ID', type: 'number', default: '10' },
+            { id: 'ipAddress', label: 'IP Address', type: 'text', default: '10.2.2.30' },
+            { id: 'mask', label: 'Subnet Mask', type: 'text', default: '255.255.255.224' }
+        ]
+    },
+    ipv6_roas: {
+        label: 'IPv6 ROAS',
+        allowed: { cisco: ['Router'], juniper: [] },
+        fields: [
+            { id: 'subInt', label: 'Sub-interface (e.g. gi0/1.2)', type: 'text', default: 'gi0/1.2' },
+            { id: 'vlanId', label: 'VLAN ID', type: 'number', default: '2' },
+            { id: 'ipv6Address', label: 'IPv6 Address/Prefix', type: 'text', default: '2001:0:0:2::1/64' }
+        ]
+    },
+    nat_pat: {
+        label: 'NAT Overload (PAT)',
+        allowed: { cisco: ['Router'], juniper: [] },
+        fields: [
+            { id: 'aclNum', label: 'ACL Number for Inside Network', type: 'number', default: '1' },
+            { id: 'insideNetwork', label: 'Inside Network (e.g. 192.168.1.0 0.0.0.255)', type: 'text', default: '192.168.1.0 0.0.0.255' },
+            { id: 'insideInterface', label: 'Inside Interface', type: 'text', default: 'gi0/0/1' },
+            { id: 'outsideInterface', label: 'Outside Interface', type: 'text', default: 'gi0/0/0' }
+        ]
+    },
     gre: {
         label: 'GRE Tunnel',
         allowed: { cisco: ['Router'], juniper: ['Router'] },
         fields: [
-            { id: 'tunnelId', label: 'Tunnel ID', type: 'number', default: '10' },
-            { id: 'tunnelIp', label: 'Tunnel IP Address', type: 'text', default: '172.16.0.1' },
-            { id: 'tunnelMask', label: 'Tunnel Subnet Mask / Prefix', type: 'text', default: '255.255.255.252' },
-            { id: 'sourceIp', label: 'Source Interface/IP', type: 'text', default: 'GigabitEthernet0/0/0' },
-            { id: 'destIp', label: 'Destination IP', type: 'text', default: '203.0.113.5' }
+            { id: 'tunnelId', label: 'Tunnel ID', type: 'number', default: '1' },
+            { id: 'tunnelIp', label: 'Tunnel IP Address', type: 'text', default: '192.168.3.1' },
+            { id: 'tunnelMask', label: 'Tunnel Subnet Mask', type: 'text', default: '255.255.255.252' },
+            { id: 'sourceIp', label: 'Tunnel Source Interface', type: 'text', default: 'gigabitethernet 0/0/0' },
+            { id: 'destIp', label: 'Tunnel Destination IP', type: 'text', default: '128.193.4.2' }
         ]
     },
     ipsec_vpn: {
         label: 'IPsec VPN (Site-to-Site)',
         allowed: { cisco: ['Router'], juniper: ['Router'] },
         fields: [
-            { id: 'peerIp', label: 'Peer IP Address', type: 'text', default: '203.0.113.10' },
-            { id: 'psk', label: 'Pre-Shared Key', type: 'text', default: 'S3cr3tK3y!' },
-            { id: 'interface', label: 'External Interface', type: 'text', default: 'GigabitEthernet0/0/0' },
-            { id: 'acl', label: 'Interesting Traffic ACL Name', type: 'text', default: 'VPN_TRAFFIC' }
+            { id: 'peerIp', label: 'Peer IP Address', type: 'text', default: '128.193.4.2' },
+            { id: 'psk', label: 'Pre-Shared Key', type: 'text', default: 'cisco' },
+            { id: 'interface', label: 'External Interface', type: 'text', default: 'gi0/0/0' },
+            { id: 'aclNum', label: 'Interesting Traffic ACL Number', type: 'number', default: '100' },
+            { id: 'localNet', label: 'Local Network (e.g. 192.168.1.0 0.0.0.255)', type: 'text', default: '192.168.1.0 0.0.0.255' },
+            { id: 'remoteNet', label: 'Remote Network (e.g. 192.168.2.0 0.0.0.255)', type: 'text', default: '192.168.2.0 0.0.0.255' }
         ]
     },
     hsrp: {
         label: 'HSRP',
         allowed: { cisco: ['Switch', 'Router'] },
         fields: [
-            { id: 'interface', label: 'Interface', type: 'text', default: 'Vlan10' },
+            { id: 'interface', label: 'Interface', type: 'text', default: 'fa0/0' },
+            { id: 'ipAddress', label: 'Interface IP Address', type: 'text', default: '192.168.1.2' },
+            { id: 'mask', label: 'Subnet Mask', type: 'text', default: '255.255.255.0' },
             { id: 'group', label: 'HSRP Group', type: 'number', default: '1' },
-            { id: 'virtualIp', label: 'Virtual IP', type: 'text', default: '192.168.10.1' },
-            { id: 'priority', label: 'Priority', type: 'number', default: '110' }
+            { id: 'virtualIp', label: 'Virtual IP', type: 'text', default: '192.168.1.1' }
         ]
     },
     vrrp: {
@@ -463,7 +701,9 @@ function generateScript() {
     const feature = featureSel.value;
     const d = getFormData();
     
-    if (Object.keys(d).length === 0) return;
+    const feat = features[feature];
+    if (!feat) return;
+    if (feat.fields.length > 0 && Object.keys(d).length === 0) return;
 
     let script = '';
 
@@ -483,35 +723,98 @@ function generateCisco(f, d, os) {
     const isNXOS = os === 'NX-OS';
     
     switch(f) {
+        case 'backup_tftp':
+            s += `enable\ncopy running-config tftp\n${d.tftpIp}\n`;
+            break;
+        case 'banner_motd':
+            s += `enable\nconf t\nbanner motd '${d.bannerText}'\nexit\n`;
+            break;
+        case 'enable_mode':
+            s += `enable\nconf t\nservice password-encryption\nenable secret ${d.enableSecret}\nexit\n`;
+            break;
+        case 'line_console':
+            s += `enable\nconf t\nline console 0\npassword ${d.password}\nlogin\nexit\n`;
+            break;
+        case 'line_aux':
+            s += `enable\nconf t\nline aux 0\npassword ${d.password}\nlogin\nexit\n`;
+            break;
+        case 'line_vty':
+            s += `enable\nconf t\nline vty ${d.vtyRange}\nlogin ${d.loginMethod}\ntransport input ssh\nexit\n`;
+            break;
+        case 'username':
+            s += `enable\nconf t\nusername ${d.username} secret ${d.secret}\nexit\n`;
+            break;
+        case 'ssh_config':
+            s += `enable\nconf t\nhostname ${d.hostname}\nip domain-name ${d.domainName}\ncrypto key generate rsa\n${d.rsaBits}\nip ssh version 2\n`;
+            s += `line con 0\nlogin\nexit\nline aux 0\nlogin\nexit\nline vty 0 15\ntransport input ssh\nlogin local\nexit\n`;
+            break;
+        case 'switch_security_ssh':
+            s += `enable\nconf t\nline console 0\npassword ${d.consolePassword}\nlogin\nlogging synchronous\nexit\n`;
+            s += `banner motd '${d.bannerText}'\nexit\nconf t\nservice password-encryption\nenable secret ${d.enableSecret}\nexit\n`;
+            s += `conf t\nline vty 0 4\nlogin local\ntransport input ssh\nlogging synchronous\nexit\n`;
+            s += `username ${d.username} secret ${d.secret}\nhostname ${d.hostname}\nip domain-name ${d.domainName}\ncrypto key generate rsa\n1024\nip ssh version 2\n`;
+            break;
         case 'vlan':
-            s += `vlan ${d.vlanId}\n`;
-            s += ` name ${d.vlanName}\n`;
-            if(isNXOS) s = `feature vlan\n` + s;
+            s += `conf t\nvlan ${d.vlanId}\n name ${d.vlanName}\nexit\n`;
+            if (d.accessPorts) {
+                s += `interface range ${d.accessPorts}\n switchport mode access\n switchport access vlan ${d.vlanId}\n no shutdown\nexit\n`;
+            }
+            if (isNXOS) s = `feature vlan\n` + s;
+            break;
+        case 'vlan_trunking':
+            s += `conf t\ninterface ${d.interface}\nswitchport mode trunk\nend\n`;
             break;
         case 'stp':
-            s += `spanning-tree mode ${d.stpMode}\n`;
-            s += `spanning-tree vlan ${d.vlanId} priority ${d.priority}\n`;
+            s += `spanning-tree mode ${d.stpMode}\nspanning-tree vlan ${d.vlanId} priority ${d.priority}\n`;
+            break;
+        case 'stp_root_primary':
+            s += `enable\nconf t\nspanning-tree vlan ${d.vlanId} root primary\nexit\n`;
+            break;
+        case 'stp_root_secondary':
+            s += `enable\nconf t\nspanning-tree vlan ${d.vlanId} root secondary\nexit\n`;
             break;
         case 'portfast_bpdu':
-            s += `interface ${d.interface}\n`;
+            s += `conf t\ninterface ${d.interface}\n`;
             if (isNXOS) {
-                s += ` spanning-tree port type edge\n`;
-                s += ` spanning-tree bpduguard enable\n`;
+                s += ` spanning-tree port type edge\n spanning-tree bpduguard enable\n`;
             } else {
-                s += ` spanning-tree portfast\n`;
-                s += ` spanning-tree bpduguard enable\n`;
+                s += ` spanning-tree portfast\n spanning-tree bpduguard enable\n`;
             }
+            s += `exit\n`;
+            break;
+        case 'enable_global_portfast_bpdu':
+            s += `enable\nconf t\nspanning-tree portfast bpduguard default\nspanning-tree portfast default\nexit\n`;
+            break;
+        case 'enable_interface_portfast_bpdu':
+            s += `enable\nconf t\nint range ${d.interface}\nshutdown\nspanning-tree portfast\nspanning-tree bpduguard enable\nno shutdown\nexit\n`;
+            break;
+        case 'port_security':
+            s += `conf t\ninterface range ${d.interface}\nswitchport mode access\nswitchport port-security\nswitchport port-security mac-address sticky\nexit\n`;
+            break;
+        case 'lacp_etherchannel':
+            s += `conf t\nint range ${d.interfaceRange}\nchannel-group ${d.channelGroup} mode ${d.mode}\nexit\n`;
+            break;
+        case 'standard_acl':
+            s += `conf t\naccess-list ${d.aclNum} ${d.action1} ${d.source1}\nint ${d.applyInterface}\nip access-group ${d.aclNum} ${d.direction}\nexit\n`;
+            break;
+        case 'extended_acl':
+            s += `conf t\naccess-list ${d.aclNum} ${d.rule1}\n`;
+            if (d.rule2) s += `access-list ${d.aclNum} ${d.rule2}\n`;
+            s += `int ${d.applyInterface}\nip access-group ${d.aclNum} ${d.direction}\nexit\n`;
+            break;
+        case 'insert_ext_acl':
+            s += `enable\nconf t\nip access-list extended ${d.aclNum}\n${d.seq} ${d.entry}\nexit\n`;
+            break;
+        case 'delete_ext_acl':
+            s += `enable\nconf t\nip access-list extended ${d.aclNum}\nno ${d.seq}\nexit\n`;
             break;
         case 'acl':
-            s += `ip access-list extended ${d.aclName}\n`;
-            s += ` ${d.action} ${d.protocol} ${d.source} ${d.dest}\n`;
+            s += `ip access-list extended ${d.aclName}\n ${d.action} ${d.protocol} ${d.source} ${d.dest}\n`;
             break;
         case 'dhcp':
             if (isNXOS) s += `feature dhcp\n`;
-            s += `ip dhcp pool ${d.poolName}\n`;
-            s += ` network ${d.network} ${d.mask}\n`;
-            s += ` default-router ${d.gateway}\n`;
-            s += ` dns-server ${d.dns}\n`;
+            if (d.excludedStart && d.excludedEnd) s += `ip dhcp excluded-address ${d.excludedStart} ${d.excludedEnd}\nservice dhcp\n`;
+            s += `ip dhcp pool ${d.poolName}\n network ${d.network} ${d.mask}\n default-router ${d.gateway}\n dns-server ${d.dns}\n`;
             break;
         case 'static_route_v4':
             s += `ip route ${d.network} ${d.mask} ${d.nexthop}\n`;
@@ -519,37 +822,49 @@ function generateCisco(f, d, os) {
         case 'static_route_v6':
             s += `ipv6 route ${d.network} ${d.nexthop}\n`;
             break;
+        case 'loopback':
+            s += `enable\nconf t\nint loopback ${d.loopbackNum}\n`;
+            if (d.description) s += `description ${d.description}\n`;
+            s += `ip address ${d.ipAddress} ${d.mask}\nno shutdown\nexit\n`;
+            break;
+        case 'ospf':
+            s += `enable\nconf t\nrouter ospf ${d.processId}\nnetwork ${d.network} ${d.wildcard} area ${d.area}\nend\n`;
+            break;
+        case 'ripv2':
+            s += `enable\nconf t\nrouter rip\nversion 2\nno auto-summary\n`;
+            (d.networks || '').split(/\s+/).forEach(function(net) { if (net) s += `network ${net}\n`; });
+            s += `exit\n`;
+            break;
+        case 'enable_ipv6_unicast':
+            s += `enable\nconf t\nipv6 unicast-routing\n`;
+            break;
+        case 'ipv6_ospfv3':
+            s += `enable\nconf t\nipv6 router ospf ${d.processId}\nrouter-id ${d.routerId}\nint ${d.interface}\nipv6 ospf ${d.processId} area ${d.area}\nexit\n`;
+            break;
+        case 'roas':
+            s += `conf t\nint ${d.subInt}\nencapsulation dot1q ${d.vlanId}\nip address ${d.ipAddress} ${d.mask}\nno shutdown\nexit\n`;
+            break;
+        case 'ipv6_roas':
+            s += `enable\nconf t\nint ${d.subInt}\nencapsulation dot1Q ${d.vlanId}\nipv6 address ${d.ipv6Address}\nipv6 enable\nexit\n`;
+            break;
+        case 'nat_pat':
+            s += `conf t\naccess-list ${d.aclNum} permit ${d.insideNetwork}\nip nat inside source list ${d.aclNum} interface ${d.outsideInterface} overload\n`;
+            s += `interface ${d.insideInterface}\nip nat inside\nexit\ninterface ${d.outsideInterface}\nip nat outside\nexit\n`;
+            break;
         case 'gre':
-            s += `interface Tunnel${d.tunnelId}\n`;
-            s += ` ip address ${d.tunnelIp} ${d.tunnelMask}\n`;
-            s += ` tunnel source ${d.sourceIp}\n`;
-            s += ` tunnel destination ${d.destIp}\n`;
+            s += `enable\nconf t\ninterface tunnel ${d.tunnelId}\nip address ${d.tunnelIp} ${d.tunnelMask}\ntunnel source ${d.sourceIp}\ntunnel destination ${d.destIp}\nexit\n`;
             break;
         case 'ipsec_vpn':
-            s += `crypto isakmp policy 10\n`;
-            s += ` encr aes\n authentication pre-share\n group 14\n`;
-            s += `crypto isakmp key ${d.psk} address ${d.peerIp}\n!\n`;
-            s += `crypto ipsec transform-set TS esp-aes esp-sha-hmac\n!\n`;
-            s += `crypto map CMAP 10 ipsec-isakmp\n`;
-            s += ` set peer ${d.peerIp}\n`;
-            s += ` set transform-set TS\n`;
-            s += ` match address ${d.acl}\n!\n`;
-            s += `interface ${d.interface}\n`;
-            s += ` crypto map CMAP\n`;
+            s += `enable\nconf t\ncrypto isakmp policy 1\nauthentication pre-share\nencryption aes 256\nhash sha\ngroup 1\nlifetime 3600\nexit\n`;
+            s += `crypto isakmp key ${d.psk} address ${d.peerIp}\n`;
+            s += `crypto ipsec transform-set MYSET esp-aes esp-sha-hmac\n`;
+            s += `access-list ${d.aclNum} permit ip ${d.localNet} ${d.remoteNet}\n`;
+            s += `crypto map MYMAP 1 ipsec-isakmp\nset transform-set MYSET\nset peer ${d.peerIp}\nmatch address ${d.aclNum}\nexit\n`;
+            s += `int ${d.interface}\ncrypto map MYMAP\nend\n`;
             break;
         case 'hsrp':
-            if (isNXOS) s += `feature hsrp\n`;
-            s += `interface ${d.interface}\n`;
-            if (isNXOS) {
-                s += ` hsrp ${d.group}\n`;
-                s += `  ip ${d.virtualIp}\n`;
-                s += `  priority ${d.priority}\n`;
-                s += `  preempt\n`;
-            } else {
-                s += ` standby ${d.group} ip ${d.virtualIp}\n`;
-                s += ` standby ${d.group} priority ${d.priority}\n`;
-                s += ` standby ${d.group} preempt\n`;
-            }
+            s += `enable\nconf t\ninterface ${d.interface}\nip address ${d.ipAddress} ${d.mask}\nno shutdown\nstandby ${d.group} ip ${d.virtualIp}\nexit\n`;
+            if (isNXOS) s = `feature hsrp\n` + s;
             break;
     }
     return s;
