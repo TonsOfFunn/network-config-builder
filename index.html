@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Config Builder</title>
+<style>
+    :root {
+        --bg: #f3f4f6;
+        --card-bg: #ffffff;
+        --text: #1f2937;
+        --text-muted: #6b7280;
+        --border: #d1d5db;
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --secondary: #10b981;
+        --secondary-hover: #059669;
+        --heading: #111827;
+        --input-bg: #fff;
+        --textarea-bg: #f8fafc;
+        --focus-ring: rgba(37, 99, 235, 0.2);
+    }
+    [data-theme="dark"] {
+        --bg: #111827;
+        --card-bg: #1f2937;
+        --text: #e5e7eb;
+        --text-muted: #9ca3af;
+        --border: #374151;
+        --primary: #3b82f6;
+        --primary-hover: #2563eb;
+        --secondary: #34d399;
+        --secondary-hover: #10b981;
+        --heading: #f9fafb;
+        --input-bg: #374151;
+        --textarea-bg: #374151;
+        --focus-ring: rgba(59, 130, 246, 0.3);
+    }
+    body {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+        line-height: 1.5;
+    }
+    .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        background: var(--card-bg);
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2, h3 {
+        margin-top: 0;
+        color: var(--heading);
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+    label {
+        font-weight: 600;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+    }
+    select, input {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-size: 1rem;
+        background-color: var(--input-bg);
+        color: var(--text);
+    }
+    select:focus, input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+    hr {
+        border: 0;
+        height: 1px;
+        background: var(--border);
+        margin: 20px 0;
+    }
+    .script-area {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    textarea {
+        width: 100%;
+        height: 350px;
+        padding: 15px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.95rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background-color: var(--textarea-bg);
+        color: var(--text);
+        resize: vertical;
+        box-sizing: border-box;
+    }
+    textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+    .buttons {
+        display: flex;
+        gap: 10px;
+    }
+    button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        color: white;
+    }
+    .btn-copy { background-color: var(--primary); }
+    .btn-copy:hover { background-color: var(--primary-hover); }
+    .btn-download { background-color: var(--secondary); }
+    .btn-download:hover { background-color: var(--secondary-hover); }
+
+    .header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    .header-row h1 { margin: 0; }
+    .theme-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--card-bg);
+        color: var(--text);
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s, border-color 0.2s;
+    }
+    .theme-toggle:hover {
+        background: var(--border);
+    }
+    .theme-toggle svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-row">
+        <h1>Network Config Builder</h1>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <span id="themeLabel">Dark mode</span>
+        </button>
+    </div>
+    
+    <div class="grid">
+        <div class="form-group">
+            <label for="vendor">Vendor</label>
+            <select id="vendor"></select>
+        </div>
+        <div class="form-group">
+            <label for="deviceType">Device Type</label>
+            <select id="deviceType"></select>
+        </div>
+        <div class="form-group">
+            <label for="os">OS</label>
+            <select id="os"></select>
+        </div>
+        <div class="form-group">
+            <label for="feature">Feature to Configure</label>
+            <select id="feature"></select>
+        </div>
+    </div>
+
+    <hr>
+
+    <h3>Feature Parameters</h3>
+    <div id="dynamicForm" class="grid">
+        <!-- Dynamic inputs generated here -->
+    </div>
+
+    <hr>
+
+    <div class="script-area">
+        <h3>Generated Configuration Script</h3>
+        <p style="margin-top: -10px; font-size: 0.85rem; color: var(--text-muted);">Edits in the form automatically update this script. You can also manually edit the text below.</p>
+        <textarea id="outputScript"></textarea>
+        <div class="buttons">
+            <button class="btn-copy" id="copyBtn">Copy to Clipboard</button>
+            <button class="btn-download" id="downloadBtn">Download .txt</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    var stored = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var dark = stored === 'dark' || (!stored && prefersDark);
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+})();
+</script>
+<script>
+const vendors = {
+    cisco: {
+        label: 'Cisco',
+        types: ['Switch', 'Router'],
+        os: { 'Switch': ['IOS/IOS-XE', 'NX-OS'], 'Router': ['IOS/IOS-XE'] }
+    },
+    juniper: {
+        label: 'Juniper',
+        types: ['Switch', 'Router'],
+        os: { 'Switch': ['Junos'], 'Router': ['Junos'] }
+    }
+};
+
+const features = {
+    vlan: {
+        label: 'VLANs',
+        allowed: { cisco: ['Switch'], juniper: ['Switch'] },
+        fields: [
+            { id: 'vlanId', label: 'VLAN ID', type: 'number', default: '10' },
+            { id: 'vlanName', label: 'VLAN Name', type: 'text', default: 'DATA_VLAN' }
+        ]
+    },
+    stp: {
+        label: 'Spanning Tree (STP)',
+        allowed: { cisco: ['Switch'], juniper: ['Switch'] },
+        fields: [
+            { id: 'stpMode', label: 'STP Mode', type: 'text', default: 'rapid-pvst' },
+            { id: 'vlanId', label: 'VLAN ID (Cisco)', type: 'number', default: '10' },
+            { id: 'priority', label: 'Priority', type: 'number', default: '4096' },
+            { id: 'interface', label: 'Interface (Juniper)', type: 'text', default: 'ge-0/0/0' }
+        ]
+    },
+    portfast_bpdu: {
+        label: 'Portfast & BPDUGuard',
+        allowed: { cisco: ['Switch'], juniper: ['Switch'] },
+        fields: [
+            { id: 'interface', label: 'Interface', type: 'text', default: 'GigabitEthernet1/0/1' }
+        ]
+    },
+    acl: {
+        label: 'Access Control Lists (ACL)',
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
+        fields: [
+            { id: 'aclName', label: 'ACL Name', type: 'text', default: 'BLOCK_SSH' },
+            { id: 'action', label: 'Action (permit/deny)', type: 'text', default: 'deny' },
+            { id: 'protocol', label: 'Protocol', type: 'text', default: 'tcp' },
+            { id: 'source', label: 'Source IP/Network', type: 'text', default: 'any' },
+            { id: 'dest', label: 'Destination IP/Network', type: 'text', default: 'any eq 22' }
+        ]
+    },
+    dhcp: {
+        label: 'DHCP Server',
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
+        fields: [
+            { id: 'poolName', label: 'Pool Name', type: 'text', default: 'OFFICE_POOL' },
+            { id: 'network', label: 'Network', type: 'text', default: '192.168.10.0' },
+            { id: 'mask', label: 'Subnet Mask / Prefix', type: 'text', default: '255.255.255.0' },
+            { id: 'gateway', label: 'Default Gateway', type: 'text', default: '192.168.10.1' },
+            { id: 'dns', label: 'DNS Server', type: 'text', default: '8.8.8.8' }
+        ]
+    },
+    static_route_v4: {
+        label: 'Static Route (IPv4)',
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
+        fields: [
+            { id: 'network', label: 'Destination Network', type: 'text', default: '0.0.0.0' },
+            { id: 'mask', label: 'Subnet Mask / Prefix', type: 'text', default: '0.0.0.0' },
+            { id: 'nexthop', label: 'Next Hop IP', type: 'text', default: '10.0.0.1' }
+        ]
+    },
+    static_route_v6: {
+        label: 'Static Route (IPv6)',
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
+        fields: [
+            { id: 'network', label: 'Destination IPv6 Network', type: 'text', default: '::/0' },
+            { id: 'nexthop', label: 'Next Hop IPv6', type: 'text', default: '2001:db8::1' }
+        ]
+    },
+    gre: {
+        label: 'GRE Tunnel',
+        allowed: { cisco: ['Router'], juniper: ['Router'] },
+        fields: [
+            { id: 'tunnelId', label: 'Tunnel ID', type: 'number', default: '10' },
+            { id: 'tunnelIp', label: 'Tunnel IP Address', type: 'text', default: '172.16.0.1' },
+            { id: 'tunnelMask', label: 'Tunnel Subnet Mask / Prefix', type: 'text', default: '255.255.255.252' },
+            { id: 'sourceIp', label: 'Source Interface/IP', type: 'text', default: 'GigabitEthernet0/0/0' },
+            { id: 'destIp', label: 'Destination IP', type: 'text', default: '203.0.113.5' }
+        ]
+    },
+    ipsec_vpn: {
+        label: 'IPsec VPN (Site-to-Site)',
+        allowed: { cisco: ['Router'], juniper: ['Router'] },
+        fields: [
+            { id: 'peerIp', label: 'Peer IP Address', type: 'text', default: '203.0.113.10' },
+            { id: 'psk', label: 'Pre-Shared Key', type: 'text', default: 'S3cr3tK3y!' },
+            { id: 'interface', label: 'External Interface', type: 'text', default: 'GigabitEthernet0/0/0' },
+            { id: 'acl', label: 'Interesting Traffic ACL Name', type: 'text', default: 'VPN_TRAFFIC' }
+        ]
+    },
+    hsrp: {
+        label: 'HSRP',
+        allowed: { cisco: ['Switch', 'Router'] },
+        fields: [
+            { id: 'interface', label: 'Interface', type: 'text', default: 'Vlan10' },
+            { id: 'group', label: 'HSRP Group', type: 'number', default: '1' },
+            { id: 'virtualIp', label: 'Virtual IP', type: 'text', default: '192.168.10.1' },
+            { id: 'priority', label: 'Priority', type: 'number', default: '110' }
+        ]
+    },
+    vrrp: {
+        label: 'VRRP',
+        allowed: { juniper: ['Switch', 'Router'] },
+        fields: [
+            { id: 'interface', label: 'Interface', type: 'text', default: 'irb.10' },
+            { id: 'realIp', label: 'Physical IP / Prefix', type: 'text', default: '192.168.10.2/24' },
+            { id: 'group', label: 'VRRP Group', type: 'number', default: '1' },
+            { id: 'virtualIp', label: 'Virtual IP', type: 'text', default: '192.168.10.1' },
+            { id: 'priority', label: 'Priority', type: 'number', default: '110' }
+        ]
+    }
+};
+
+// DOM Elements
+const vendorSel = document.getElementById('vendor');
+const deviceTypeSel = document.getElementById('deviceType');
+const osSel = document.getElementById('os');
+const featureSel = document.getElementById('feature');
+const dynamicForm = document.getElementById('dynamicForm');
+const outputScript = document.getElementById('outputScript');
+const copyBtn = document.getElementById('copyBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+
+function init() {
+    populateDropdown(vendorSel, Object.keys(vendors).map(k => ({ value: k, label: vendors[k].label })));
+    vendorSel.addEventListener('change', updateDeviceTypes);
+    deviceTypeSel.addEventListener('change', updateOS);
+    deviceTypeSel.addEventListener('change', updateFeatures);
+    osSel.addEventListener('change', generateScript);
+    featureSel.addEventListener('change', renderForm);
+    
+    // Set initial sensible defaults
+    vendorSel.value = 'cisco';
+    updateDeviceTypes();
+    deviceTypeSel.value = 'Switch';
+    updateOS();
+    updateFeatures();
+    featureSel.value = 'vlan';
+    renderForm();
+}
+
+function populateDropdown(element, options) {
+    element.innerHTML = '';
+    options.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt.value;
+        option.textContent = opt.label;
+        element.appendChild(option);
+    });
+}
+
+function updateDeviceTypes() {
+    const v = vendorSel.value;
+    populateDropdown(deviceTypeSel, vendors[v].types.map(t => ({ value: t, label: t })));
+    updateOS();
+    updateFeatures();
+}
+
+function updateOS() {
+    const v = vendorSel.value;
+    const t = deviceTypeSel.value;
+    if (vendors[v].os[t]) {
+        populateDropdown(osSel, vendors[v].os[t].map(o => ({ value: o, label: o })));
+    } else {
+        osSel.innerHTML = '';
+    }
+    generateScript();
+}
+
+function updateFeatures() {
+    const v = vendorSel.value;
+    const t = deviceTypeSel.value;
+    
+    const validFeatures = Object.keys(features).filter(k => {
+        const feat = features[k];
+        return feat.allowed[v] && feat.allowed[v].includes(t);
+    }).map(k => ({ value: k, label: features[k].label }));
+    
+    populateDropdown(featureSel, validFeatures);
+    if(validFeatures.length > 0) {
+        featureSel.value = validFeatures[0].value;
+    }
+    renderForm();
+}
+
+function renderForm() {
+    dynamicForm.innerHTML = '';
+    const f = featureSel.value;
+    if (!f || !features[f]) return;
+    
+    features[f].fields.forEach(field => {
+        const div = document.createElement('div');
+        div.className = 'form-group';
+        
+        const label = document.createElement('label');
+        label.htmlFor = field.id;
+        label.textContent = field.label;
+        
+        const input = document.createElement('input');
+        input.type = field.type;
+        input.id = field.id;
+        input.value = field.default;
+        
+        input.addEventListener('input', generateScript);
+        
+        div.appendChild(label);
+        div.appendChild(input);
+        dynamicForm.appendChild(div);
+    });
+    
+    generateScript();
+}
+
+function getFormData() {
+    const f = featureSel.value;
+    const data = {};
+    if (!f || !features[f]) return data;
+    
+    features[f].fields.forEach(field => {
+        const el = document.getElementById(field.id);
+        if (el) data[field.id] = el.value;
+    });
+    return data;
+}
+
+function generateScript() {
+    const vendor = vendorSel.value;
+    const type = deviceTypeSel.value;
+    const os = osSel.value;
+    const feature = featureSel.value;
+    const d = getFormData();
+    
+    if (Object.keys(d).length === 0) return;
+
+    let script = '';
+
+    if (vendor === 'cisco') {
+        script += generateCisco(feature, d, os);
+    } else if (vendor === 'juniper') {
+        script += generateJuniper(feature, d, os);
+    }
+
+    script = script.split('\n').map(function(line) { return line.replace(/^\s+/, ''); }).join('\n');
+    script = script.split('\n').filter(function(line) { return !line.startsWith('!'); }).join('\n');
+    outputScript.value = script;
+}
+
+function generateCisco(f, d, os) {
+    let s = '';
+    const isNXOS = os === 'NX-OS';
+    
+    switch(f) {
+        case 'vlan':
+            s += `vlan ${d.vlanId}\n`;
+            s += ` name ${d.vlanName}\n`;
+            if(isNXOS) s = `feature vlan\n` + s;
+            break;
+        case 'stp':
+            s += `spanning-tree mode ${d.stpMode}\n`;
+            s += `spanning-tree vlan ${d.vlanId} priority ${d.priority}\n`;
+            break;
+        case 'portfast_bpdu':
+            s += `interface ${d.interface}\n`;
+            if (isNXOS) {
+                s += ` spanning-tree port type edge\n`;
+                s += ` spanning-tree bpduguard enable\n`;
+            } else {
+                s += ` spanning-tree portfast\n`;
+                s += ` spanning-tree bpduguard enable\n`;
+            }
+            break;
+        case 'acl':
+            s += `ip access-list extended ${d.aclName}\n`;
+            s += ` ${d.action} ${d.protocol} ${d.source} ${d.dest}\n`;
+            break;
+        case 'dhcp':
+            if (isNXOS) s += `feature dhcp\n`;
+            s += `ip dhcp pool ${d.poolName}\n`;
+            s += ` network ${d.network} ${d.mask}\n`;
+            s += ` default-router ${d.gateway}\n`;
+            s += ` dns-server ${d.dns}\n`;
+            break;
+        case 'static_route_v4':
+            s += `ip route ${d.network} ${d.mask} ${d.nexthop}\n`;
+            break;
+        case 'static_route_v6':
+            s += `ipv6 route ${d.network} ${d.nexthop}\n`;
+            break;
+        case 'gre':
+            s += `interface Tunnel${d.tunnelId}\n`;
+            s += ` ip address ${d.tunnelIp} ${d.tunnelMask}\n`;
+            s += ` tunnel source ${d.sourceIp}\n`;
+            s += ` tunnel destination ${d.destIp}\n`;
+            break;
+        case 'ipsec_vpn':
+            s += `crypto isakmp policy 10\n`;
+            s += ` encr aes\n authentication pre-share\n group 14\n`;
+            s += `crypto isakmp key ${d.psk} address ${d.peerIp}\n!\n`;
+            s += `crypto ipsec transform-set TS esp-aes esp-sha-hmac\n!\n`;
+            s += `crypto map CMAP 10 ipsec-isakmp\n`;
+            s += ` set peer ${d.peerIp}\n`;
+            s += ` set transform-set TS\n`;
+            s += ` match address ${d.acl}\n!\n`;
+            s += `interface ${d.interface}\n`;
+            s += ` crypto map CMAP\n`;
+            break;
+        case 'hsrp':
+            if (isNXOS) s += `feature hsrp\n`;
+            s += `interface ${d.interface}\n`;
+            if (isNXOS) {
+                s += ` hsrp ${d.group}\n`;
+                s += `  ip ${d.virtualIp}\n`;
+                s += `  priority ${d.priority}\n`;
+                s += `  preempt\n`;
+            } else {
+                s += ` standby ${d.group} ip ${d.virtualIp}\n`;
+                s += ` standby ${d.group} priority ${d.priority}\n`;
+                s += ` standby ${d.group} preempt\n`;
+            }
+            break;
+    }
+    return s;
+}
+
+function generateJuniper(f, d, os) {
+    let s = '';
+    switch(f) {
+        case 'vlan':
+            s += `set vlans ${d.vlanName} vlan-id ${d.vlanId}\n`;
+            break;
+        case 'stp':
+            s += `set protocols rstp interface ${d.interface}\n`;
+            s += `set protocols rstp bridge-priority ${d.priority}\n`;
+            break;
+        case 'portfast_bpdu':
+            s += `set protocols rstp interface ${d.interface} edge\n`;
+            s += `set protocols layer2-control bpdu-block interface ${d.interface}\n`;
+            break;
+        case 'acl':
+            s += `set firewall family inet filter ${d.aclName} term 1 from protocol ${d.protocol}\n`;
+            if (d.source !== 'any') s += `set firewall family inet filter ${d.aclName} term 1 from source-address ${d.source}\n`;
+            if (d.dest !== 'any') s += `set firewall family inet filter ${d.aclName} term 1 from destination-address ${d.dest}\n`;
+            s += `set firewall family inet filter ${d.aclName} term 1 then ${d.action === 'permit' ? 'accept' : 'reject'}\n`;
+            break;
+        case 'dhcp':
+            s += `set access address-assignment pool ${d.poolName} family inet network ${d.network}/${d.mask}\n`;
+            s += `set access address-assignment pool ${d.poolName} family inet dhcp-attributes router ${d.gateway}\n`;
+            s += `set access address-assignment pool ${d.poolName} family inet dhcp-attributes name-server ${d.dns}\n`;
+            break;
+        case 'static_route_v4':
+            s += `set routing-options static route ${d.network}/${d.mask} next-hop ${d.nexthop}\n`;
+            break;
+        case 'static_route_v6':
+            s += `set routing-options rib inet6.0 static route ${d.network} next-hop ${d.nexthop}\n`;
+            break;
+        case 'gre':
+            s += `set interfaces gr-0/0/0 unit ${d.tunnelId} tunnel source ${d.sourceIp}\n`;
+            s += `set interfaces gr-0/0/0 unit ${d.tunnelId} tunnel destination ${d.destIp}\n`;
+            s += `set interfaces gr-0/0/0 unit ${d.tunnelId} family inet address ${d.tunnelIp}/${d.tunnelMask}\n`;
+            break;
+        case 'ipsec_vpn':
+            s += `set security ike proposal IKE_PROP authentication-method pre-shared-keys\n`;
+            s += `set security ike policy IKE_POL proposals IKE_PROP\n`;
+            s += `set security ike policy IKE_POL pre-shared-key ascii-text ${d.psk}\n`;
+            s += `set security ike gateway IKE_GW ike-policy IKE_POL\n`;
+            s += `set security ike gateway IKE_GW address ${d.peerIp}\n`;
+            s += `set security ike gateway IKE_GW external-interface ${d.interface}\n`;
+            s += `set security ipsec proposal IPSEC_PROP protocol esp\n`;
+            s += `set security ipsec policy IPSEC_POL proposals IPSEC_PROP\n`;
+            s += `set security ipsec vpn VPN_TUNNEL ike gateway IKE_GW\n`;
+            s += `set security ipsec vpn VPN_TUNNEL ipsec-policy IPSEC_POL\n`;
+            s += `set security ipsec vpn VPN_TUNNEL establish-tunnels immediately\n`;
+            break;
+        case 'vrrp':
+            s += `set interfaces ${d.interface} unit 0 family inet address ${d.realIp} vrrp-group ${d.group} virtual-address ${d.virtualIp}\n`;
+            s += `set interfaces ${d.interface} unit 0 family inet address ${d.realIp} vrrp-group ${d.group} priority ${d.priority}\n`;
+            s += `set interfaces ${d.interface} unit 0 family inet address ${d.realIp} vrrp-group ${d.group} preempt\n`;
+            break;
+    }
+    return s;
+}
+
+// Button listeners
+copyBtn.addEventListener('click', () => {
+    outputScript.select();
+    document.execCommand('copy');
+    const originalText = copyBtn.textContent;
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => { copyBtn.textContent = originalText; }, 2000);
+});
+
+downloadBtn.addEventListener('click', () => {
+    const text = outputScript.value;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `config_${vendorSel.value}_${featureSel.value}.txt`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+});
+
+// Boot
+function applyThemeUI() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    var iconSun = document.getElementById('iconSun');
+    var iconMoon = document.getElementById('iconMoon');
+    var label = document.getElementById('themeLabel');
+    if (iconSun) iconSun.style.display = isDark ? 'none' : 'block';
+    if (iconMoon) iconMoon.style.display = isDark ? 'block' : 'none';
+    if (label) label.textContent = isDark ? 'Light mode' : 'Dark mode';
+}
+document.getElementById('themeToggle').addEventListener('click', function() {
+    var el = document.documentElement;
+    var isDark = el.getAttribute('data-theme') === 'dark';
+    el.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    applyThemeUI();
+});
+window.onload = function() {
+    init();
+    applyThemeUI();
+};
+</script>
+</body>
+</html>
