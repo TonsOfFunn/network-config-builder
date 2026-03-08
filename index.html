@@ -61,6 +61,28 @@
         gap: 15px;
         margin-bottom: 20px;
     }
+    .params-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 900px;
+    }
+    .params-grid .form-group {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .params-grid .form-group label {
+        flex: 0 0 220px;
+        min-width: 220px;
+        margin-bottom: 0;
+        word-wrap: break-word;
+    }
+    .params-grid .form-group input {
+        flex: 1;
+        min-width: 0;
+    }
     .form-group {
         display: flex;
         flex-direction: column;
@@ -196,7 +218,7 @@
     <hr>
 
     <h3>Feature Parameters</h3>
-    <div id="dynamicForm" class="grid">
+    <div id="dynamicForm" class="grid params-grid">
         <!-- Dynamic inputs generated here -->
     </div>
 
@@ -238,42 +260,42 @@ const vendors = {
 const features = {
     backup_tftp: {
         label: 'Backup Config to TFTP Server',
-        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'tftpIp', label: 'TFTP Server IP', type: 'text', default: '10.2.1.249' }
         ]
     },
     banner_motd: {
         label: 'Banner MOTD',
-        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'bannerText', label: 'Banner Text (use quotes in value)', type: 'text', default: '*** UNAUTHORIZED ACCESS PROHIBITED ***' }
         ]
     },
     enable_mode: {
         label: 'Enable Secret / Password Encryption',
-        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'enableSecret', label: 'Enable Secret', type: 'text', default: 'cisco' }
         ]
     },
     line_console: {
         label: 'Line Console 0',
-        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'password', label: 'Console Password', type: 'text', default: 'cisco' }
         ]
     },
     line_aux: {
         label: 'Line AUX 0',
-        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'password', label: 'AUX Password', type: 'text', default: 'cisco' }
         ]
     },
     line_vty: {
         label: 'Line VTY 0-4',
-        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'vtyRange', label: 'VTY Range (e.g. 0 4 or 0 15)', type: 'text', default: '0 4' },
             { id: 'loginMethod', label: 'Login (local or password)', type: 'text', default: 'local' }
@@ -281,7 +303,7 @@ const features = {
     },
     username: {
         label: 'Username (Local User)',
-        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'username', label: 'Username', type: 'text', default: 'cisco' },
             { id: 'secret', label: 'Secret/Password', type: 'text', default: 'cisco' }
@@ -289,7 +311,7 @@ const features = {
     },
     ssh_config: {
         label: 'SSH (Hostname, Domain, RSA, VTY)',
-        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'hostname', label: 'Hostname', type: 'text', default: 'sw01' },
             { id: 'domainName', label: 'IP Domain Name', type: 'text', default: 'mis351.net' },
@@ -298,7 +320,7 @@ const features = {
     },
     switch_security_ssh: {
         label: 'Switch Security with SSH (Full)',
-        allowed: { cisco: ['Switch'], juniper: [] },
+        allowed: { cisco: ['Switch'], juniper: ['Switch'] },
         fields: [
             { id: 'hostname', label: 'Hostname', type: 'text', default: 'Switch_Access_2' },
             { id: 'domainName', label: 'Domain Name', type: 'text', default: 'mis451-8.net' },
@@ -320,7 +342,7 @@ const features = {
     },
     vlan_trunking: {
         label: 'VLAN Trunking',
-        allowed: { cisco: ['Switch'], juniper: [] },
+        allowed: { cisco: ['Switch'], juniper: ['Switch'] },
         fields: [
             { id: 'interface', label: 'Trunk Interface', type: 'text', default: 'gigabitEthernet 0/1' }
         ]
@@ -337,14 +359,14 @@ const features = {
     },
     stp_root_primary: {
         label: 'STP Root Bridge Primary',
-        allowed: { cisco: ['Switch'], juniper: [] },
+        allowed: { cisco: ['Switch'], juniper: ['Switch'] },
         fields: [
             { id: 'vlanId', label: 'VLAN ID', type: 'number', default: '1' }
         ]
     },
     stp_root_secondary: {
         label: 'STP Root Bridge Secondary',
-        allowed: { cisco: ['Switch'], juniper: [] },
+        allowed: { cisco: ['Switch'], juniper: ['Switch'] },
         fields: [
             { id: 'vlanId', label: 'VLAN ID', type: 'number', default: '1' }
         ]
@@ -358,26 +380,26 @@ const features = {
     },
     enable_global_portfast_bpdu: {
         label: 'Enable Global Portfast BPDUGuard',
-        allowed: { cisco: ['Switch'], juniper: [] },
+        allowed: { cisco: ['Switch'], juniper: ['Switch'] },
         fields: []
     },
     enable_interface_portfast_bpdu: {
         label: 'Enable Interface Portfast BPDUGuard',
-        allowed: { cisco: ['Switch'], juniper: [] },
+        allowed: { cisco: ['Switch'], juniper: ['Switch'] },
         fields: [
             { id: 'interface', label: 'Interface Range', type: 'text', default: 'fa0/1-2' }
         ]
     },
     port_security: {
         label: 'Port-Security',
-        allowed: { cisco: ['Switch'], juniper: [] },
+        allowed: { cisco: ['Switch'], juniper: ['Switch'] },
         fields: [
             { id: 'interface', label: 'Interface Range', type: 'text', default: 'fa0/1 - 2' }
         ]
     },
     lacp_etherchannel: {
         label: 'LACP EtherChannel',
-        allowed: { cisco: ['Switch'], juniper: [] },
+        allowed: { cisco: ['Switch'], juniper: ['Switch'] },
         fields: [
             { id: 'interfaceRange', label: 'Interface Range', type: 'text', default: 'g0/1 - 2' },
             { id: 'channelGroup', label: 'Channel Group Number', type: 'number', default: '1' },
@@ -386,7 +408,7 @@ const features = {
     },
     standard_acl: {
         label: 'Standard IP ACLs',
-        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'aclNum', label: 'ACL Number (1-99)', type: 'number', default: '1' },
             { id: 'action1', label: 'Rule 1 (permit/deny)', type: 'text', default: 'permit' },
@@ -397,7 +419,7 @@ const features = {
     },
     extended_acl: {
         label: 'Extended IP ACLs',
-        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'aclNum', label: 'ACL Number (100-199)', type: 'number', default: '103' },
             { id: 'rule1', label: 'Rule 1: deny|permit protocol source dest', type: 'text', default: 'deny ip 10.0.0.0 0.255.255.255 192.168.100.0 0.0.0.63' },
@@ -408,7 +430,7 @@ const features = {
     },
     insert_ext_acl: {
         label: 'Insert Extended ACL Entry',
-        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'aclNum', label: 'Extended ACL Number', type: 'number', default: '103' },
             { id: 'seq', label: 'Sequence Number', type: 'number', default: '15' },
@@ -417,7 +439,7 @@ const features = {
     },
     delete_ext_acl: {
         label: 'Delete Extended ACL Entry',
-        allowed: { cisco: ['Switch', 'Router'], juniper: [] },
+        allowed: { cisco: ['Switch', 'Router'], juniper: ['Switch', 'Router'] },
         fields: [
             { id: 'aclNum', label: 'Extended ACL Number', type: 'number', default: '103' },
             { id: 'seq', label: 'Sequence Number to Remove', type: 'number', default: '20' }
@@ -466,7 +488,7 @@ const features = {
     },
     loopback: {
         label: 'Loopback Address',
-        allowed: { cisco: ['Router'], juniper: [] },
+        allowed: { cisco: ['Router'], juniper: ['Router'] },
         fields: [
             { id: 'loopbackNum', label: 'Loopback Number', type: 'number', default: '0' },
             { id: 'ipAddress', label: 'IP Address', type: 'text', default: '10.1.254.248' },
@@ -476,7 +498,7 @@ const features = {
     },
     ospf: {
         label: 'OSPF',
-        allowed: { cisco: ['Router'], juniper: [] },
+        allowed: { cisco: ['Router'], juniper: ['Router'] },
         fields: [
             { id: 'processId', label: 'OSPF Process ID', type: 'number', default: '1' },
             { id: 'network', label: 'Network Address', type: 'text', default: '172.16.0.0' },
@@ -486,19 +508,30 @@ const features = {
     },
     ripv2: {
         label: 'RIPv2',
-        allowed: { cisco: ['Router'], juniper: [] },
+        allowed: { cisco: ['Router'], juniper: ['Router'] },
         fields: [
             { id: 'networks', label: 'Networks (space-separated, e.g. 172.16.0.0 10.1.1.0)', type: 'text', default: '172.16.0.0' }
         ]
     },
+    bgp: {
+        label: 'BGP',
+        allowed: { cisco: ['Router'], juniper: ['Router'] },
+        fields: [
+            { id: 'localAs', label: 'Local AS Number', type: 'number', default: '65001' },
+            { id: 'neighborIp', label: 'Neighbor IP Address', type: 'text', default: '192.168.1.2' },
+            { id: 'remoteAs', label: 'Remote AS Number', type: 'number', default: '65002' },
+            { id: 'networkToAdvertise', label: 'Network to Advertise (e.g. 10.0.0.0 255.255.255.0 or leave blank)', type: 'text', default: '' },
+            { id: 'updateSource', label: 'Update Source Interface (optional, Cisco)', type: 'text', default: '' }
+        ]
+    },
     enable_ipv6_unicast: {
         label: 'Enable IPv6 Unicast Routing',
-        allowed: { cisco: ['Router'], juniper: [] },
+        allowed: { cisco: ['Router'], juniper: ['Router'] },
         fields: []
     },
     ipv6_ospfv3: {
         label: 'IPv6 OSPFv3',
-        allowed: { cisco: ['Router'], juniper: [] },
+        allowed: { cisco: ['Router'], juniper: ['Router'] },
         fields: [
             { id: 'processId', label: 'OSPFv3 Process ID', type: 'number', default: '1' },
             { id: 'routerId', label: 'Router ID', type: 'text', default: '1.1.1.1' },
@@ -508,7 +541,7 @@ const features = {
     },
     roas: {
         label: 'Router on a Stick (ROAS)',
-        allowed: { cisco: ['Router'], juniper: [] },
+        allowed: { cisco: ['Router'], juniper: ['Router'] },
         fields: [
             { id: 'subInt', label: 'Sub-interface (e.g. g0/1.10)', type: 'text', default: 'g0/1.10' },
             { id: 'vlanId', label: 'VLAN ID', type: 'number', default: '10' },
@@ -518,7 +551,7 @@ const features = {
     },
     ipv6_roas: {
         label: 'IPv6 ROAS',
-        allowed: { cisco: ['Router'], juniper: [] },
+        allowed: { cisco: ['Router'], juniper: ['Router'] },
         fields: [
             { id: 'subInt', label: 'Sub-interface (e.g. gi0/1.2)', type: 'text', default: 'gi0/1.2' },
             { id: 'vlanId', label: 'VLAN ID', type: 'number', default: '2' },
@@ -527,7 +560,7 @@ const features = {
     },
     nat_pat: {
         label: 'NAT Overload (PAT)',
-        allowed: { cisco: ['Router'], juniper: [] },
+        allowed: { cisco: ['Router'], juniper: ['Router'] },
         fields: [
             { id: 'aclNum', label: 'ACL Number for Inside Network', type: 'number', default: '1' },
             { id: 'insideNetwork', label: 'Inside Network (e.g. 192.168.1.0 0.0.0.255)', type: 'text', default: '192.168.1.0 0.0.0.255' },
@@ -835,6 +868,27 @@ function generateCisco(f, d, os) {
             (d.networks || '').split(/\s+/).forEach(function(net) { if (net) s += `network ${net}\n`; });
             s += `exit\n`;
             break;
+        case 'bgp':
+            if (isNXOS) s += `feature bgp\n`;
+            s += `enable\nconf t\nrouter bgp ${d.localAs}\n`;
+            s += ` neighbor ${d.neighborIp} remote-as ${d.remoteAs}\n`;
+            if (d.updateSource && d.updateSource.trim()) s += ` neighbor ${d.neighborIp} update-source ${d.updateSource.trim()}\n`;
+            if (d.networkToAdvertise && d.networkToAdvertise.trim()) {
+                var adv = d.networkToAdvertise.trim();
+                var parts = adv.split(/\s+/);
+                if (parts.length >= 2) {
+                    s += ` network ${parts[0]} mask ${parts[1]}\n`;
+                } else if (parts[0].indexOf('/') !== -1) {
+                    var p = parts[0].split('/');
+                    s += ` address-family ipv4 unicast\n`;
+                    s += `  network ${p[0]}/${p[1] || '24'}\n`;
+                    s += ` exit-address-family\n`;
+                } else if (parts[0]) {
+                    s += ` network ${parts[0]}\n`;
+                }
+            }
+            s += `exit\n`;
+            break;
         case 'enable_ipv6_unicast':
             s += `enable\nconf t\nipv6 unicast-routing\n`;
             break;
@@ -872,17 +926,136 @@ function generateCisco(f, d, os) {
 
 function generateJuniper(f, d, os) {
     let s = '';
+    function maskToPrefix(m) {
+        if (!m) return '24';
+        if (/^\d+$/.test(m)) return m;
+        if (m === '255.255.255.252') return '30';
+        if (m === '255.255.255.224') return '27';
+        if (m === '255.255.255.0') return '24';
+        if (m === '255.255.0.0') return '16';
+        return '24';
+    }
     switch(f) {
+        case 'backup_tftp':
+            s += `show configuration | display set | save ${d.tftpIp}:/juniper-config.set\n`;
+            s += `# Or use SCP: file copy /config/juniper.conf scp://user@${d.tftpIp}/backup/\n`;
+            break;
+        case 'banner_motd':
+            s += `set system login message "${d.bannerText}"\n`;
+            break;
+        case 'enable_mode':
+            s += `set system root-authentication plain-text-password\n`;
+            s += `# Enter password when prompted; or use encrypted-password for hash\n`;
+            break;
+        case 'line_console':
+            s += `set system root-authentication plain-text-password\n`;
+            s += `set system console insecure\n`;
+            s += `# Console uses root login; set root password when prompted\n`;
+            break;
+        case 'line_aux':
+            s += `set system ports aux full-flow-control\n`;
+            s += `set system root-authentication plain-text-password\n`;
+            s += `# AUX uses root login on supported platforms\n`;
+            break;
+        case 'line_vty':
+            s += `set system services ssh\n`;
+            s += `set system services ssh protocol-version v2\n`;
+            s += `# For login local: create users with 'set system login user <name> class super-user authentication'\n`;
+            break;
+        case 'username':
+            s += `set system login user ${d.username} class super-user authentication plain-text-password\n`;
+            s += `# Enter password when prompted; or use encrypted-password for hash\n`;
+            break;
+        case 'ssh_config':
+            s += `set system hostname ${d.hostname}\n`;
+            s += `set system domain-name ${d.domainName}\n`;
+            s += `set system services ssh\n`;
+            s += `set system services ssh protocol-version v2\n`;
+            break;
+        case 'switch_security_ssh':
+            s += `set system hostname ${d.hostname}\n`;
+            s += `set system domain-name ${d.domainName}\n`;
+            s += `set system login message "${d.bannerText}"\n`;
+            s += `set system root-authentication plain-text-password\n`;
+            s += `set system login user ${d.username} class super-user authentication plain-text-password\n`;
+            s += `set system services ssh\n`;
+            s += `set system services ssh protocol-version v2\n`;
+            s += `# Set root and user passwords when prompted\n`;
+            break;
         case 'vlan':
             s += `set vlans ${d.vlanName} vlan-id ${d.vlanId}\n`;
+            if (d.accessPorts && d.accessPorts.trim()) {
+                d.accessPorts.split(/\s+/).forEach(function(iface) {
+                    if (iface) s += `set interfaces ${iface} unit 0 family ethernet-switching port-mode access vlan members ${d.vlanName}\n`;
+                });
+            }
+            break;
+        case 'vlan_trunking':
+            s += `set interfaces ${d.interface} unit 0 family ethernet-switching port-mode trunk\n`;
+            s += `set interfaces ${d.interface} unit 0 family ethernet-switching vlan members all\n`;
             break;
         case 'stp':
             s += `set protocols rstp interface ${d.interface}\n`;
             s += `set protocols rstp bridge-priority ${d.priority}\n`;
             break;
+        case 'stp_root_primary':
+            s += `set protocols rstp bridge-priority 0\n`;
+            s += `# Lowest priority becomes root (0 = primary)\n`;
+            break;
+        case 'stp_root_secondary':
+            s += `set protocols rstp bridge-priority 8192\n`;
+            s += `# Secondary root typically 8192 (4096 increments)\n`;
+            break;
         case 'portfast_bpdu':
             s += `set protocols rstp interface ${d.interface} edge\n`;
             s += `set protocols layer2-control bpdu-block interface ${d.interface}\n`;
+            break;
+        case 'enable_global_portfast_bpdu':
+            s += `set protocols rstp interface all edge\n`;
+            s += `set protocols layer2-control bpdu-block interface all\n`;
+            s += `# Restrict to access ports in production; adjust interface list as needed\n`;
+            break;
+        case 'enable_interface_portfast_bpdu':
+            s += `set protocols rstp interface ${d.interface} edge\n`;
+            s += `set protocols layer2-control bpdu-block interface ${d.interface}\n`;
+            break;
+        case 'port_security':
+            s += `set ethernet-switching-options secure-access-port interface ${d.interface} mac-limit 1 action drop\n`;
+            s += `# Add allowed-mac list if using static MACs\n`;
+            break;
+        case 'lacp_etherchannel':
+            s += `set chassis aggregated-devices ethernet device-count 1\n`;
+            s += `set interfaces ae${d.channelGroup} aggregated-ether-options lacp ${d.mode}\n`;
+            (d.interfaceRange || '').split(/[\s,-]+/).forEach(function(iface) {
+                if (iface && /^[a-z]+-[0-9\/\.]+$/i.test(iface)) s += `set interfaces ${iface} ether-options 802.3ad ae${d.channelGroup}\n`;
+            });
+            s += `# For Juniper use interface names in range (e.g. ge-0/0/1 ge-0/0/2)\n`;
+            break;
+        case 'standard_acl':
+            var src = (d.source1 || '').trim();
+            if (src && !src.includes('/')) src = src + '/32';
+            if (!src) src = '0.0.0.0/0';
+            s += `set firewall family inet filter std-${d.aclNum} term 1 from source-address ${src}\n`;
+            s += `set firewall family inet filter std-${d.aclNum} term 1 then ${d.action1 === 'permit' ? 'accept' : 'discard'}\n`;
+            s += `set firewall family inet filter std-${d.aclNum} term 2 then accept\n`;
+            s += `set interfaces ${d.applyInterface} unit 0 family inet filter ${d.direction === 'in' ? 'input' : 'output'} std-${d.aclNum}\n`;
+            break;
+        case 'extended_acl':
+            s += `set firewall family inet filter ext-${d.aclNum} term 1 from source-address 10.0.0.0/8\n`;
+            s += `set firewall family inet filter ext-${d.aclNum} term 1 from destination-address 192.168.100.0/26\n`;
+            s += `set firewall family inet filter ext-${d.aclNum} term 1 then discard\n`;
+            s += `set firewall family inet filter ext-${d.aclNum} term 2 then accept\n`;
+            s += `set interfaces ${d.applyInterface} unit 0 family inet filter ${d.direction === 'in' ? 'input' : 'output'} ext-${d.aclNum}\n`;
+            s += `# Adjust term 1 from/to match your rule1; add more terms as needed\n`;
+            break;
+        case 'insert_ext_acl':
+            s += `set firewall family inet filter ${d.aclNum} term ${d.seq} from source-address 10.1.0.0/24\n`;
+            s += `set firewall family inet filter ${d.aclNum} term ${d.seq} from destination-address 10.2.1.249/32\n`;
+            s += `set firewall family inet filter ${d.aclNum} term ${d.seq} then discard\n`;
+            s += `# Adjust from/to to match: ${d.entry}\n`;
+            break;
+        case 'delete_ext_acl':
+            s += `delete firewall family inet filter ${d.aclNum} term ${d.seq}\n`;
             break;
         case 'acl':
             s += `set firewall family inet filter ${d.aclName} term 1 from protocol ${d.protocol}\n`;
@@ -891,20 +1064,81 @@ function generateJuniper(f, d, os) {
             s += `set firewall family inet filter ${d.aclName} term 1 then ${d.action === 'permit' ? 'accept' : 'reject'}\n`;
             break;
         case 'dhcp':
-            s += `set access address-assignment pool ${d.poolName} family inet network ${d.network}/${d.mask}\n`;
+            s += `set access address-assignment pool ${d.poolName} family inet network ${d.network}/${maskToPrefix(d.mask)}\n`;
             s += `set access address-assignment pool ${d.poolName} family inet dhcp-attributes router ${d.gateway}\n`;
             s += `set access address-assignment pool ${d.poolName} family inet dhcp-attributes name-server ${d.dns}\n`;
             break;
         case 'static_route_v4':
-            s += `set routing-options static route ${d.network}/${d.mask} next-hop ${d.nexthop}\n`;
+            s += `set routing-options static route ${d.network}/${maskToPrefix(d.mask)} next-hop ${d.nexthop}\n`;
             break;
         case 'static_route_v6':
             s += `set routing-options rib inet6.0 static route ${d.network} next-hop ${d.nexthop}\n`;
             break;
+        case 'loopback':
+            var prefix = /^\d+$/.test(d.mask) ? d.mask : (d.mask === '255.255.255.252') ? '30' : (d.mask === '255.255.255.0') ? '24' : (d.mask === '255.255.0.0') ? '16' : '30';
+            s += `set interfaces lo0 unit ${d.loopbackNum} family inet address ${d.ipAddress}/${prefix}\n`;
+            if (d.description) s += `set interfaces lo0 unit ${d.loopbackNum} description ${d.description}\n`;
+            break;
+        case 'ospf':
+            s += `set protocols ospf area ${d.area} interface ${d.interface || 'ge-0/0/0'}\n`;
+            break;
+        case 'ripv2':
+            (d.networks || '').split(/\s+/).forEach(function(net) {
+                if (net && /^[a-z]+-[0-9\/\.]+$/i.test(net)) s += `set protocols rip group rip-group neighbor ${net}\n`;
+            });
+            s += `# For Juniper enter interface names in Networks field (e.g. ge-0/0/0 ge-0/0/1)\nset protocols rip group rip-group neighbor ge-0/0/0\n`;
+            break;
+        case 'bgp':
+            s += `set protocols bgp group ebgp type external\n`;
+            s += `set protocols bgp group ebgp peer-as ${d.remoteAs}\n`;
+            s += `set protocols bgp group ebgp neighbor ${d.neighborIp}\n`;
+            s += `set protocols bgp autonomous-system ${d.localAs}\n`;
+            if (d.networkToAdvertise && d.networkToAdvertise.trim()) {
+                var netStr = d.networkToAdvertise.trim();
+                var parts = netStr.split(/\s+/);
+                var net = parts[0] || '';
+                var prefix = '24';
+                if (net.indexOf('/') !== -1) { var p = net.split('/'); net = p[0]; prefix = p[1] || '24'; }
+                else if (parts.length >= 2) prefix = maskToPrefix(parts[1]);
+                s += `set policy-options policy-statement EXPORT-BGP term 1 from route-filter ${net}/${prefix} exact\n`;
+                s += `set policy-options policy-statement EXPORT-BGP term 1 then accept\n`;
+                s += `set protocols bgp group ebgp export EXPORT-BGP\n`;
+            }
+            break;
+        case 'enable_ipv6_unicast':
+            s += `# IPv6 routing: enable IPv6 on interfaces and configure routing protocols\n`;
+            s += `set interfaces lo0 unit 0 family inet6 address 2001::1/128\n`;
+            break;
+        case 'ipv6_ospfv3':
+            s += `set protocols ospf3 area ${d.area} interface ${d.interface}.0\n`;
+            s += `set routing-options router-id ${d.routerId}\n`;
+            break;
+        case 'roas':
+            var roasPrefix = (d.mask === '255.255.255.224') ? '27' : (d.mask === '255.255.255.0') ? '24' : '27';
+            s += `set interfaces irb unit ${d.vlanId} family inet address ${d.ipAddress}/${roasPrefix}\n`;
+            s += `set vlans vlan${d.vlanId} vlan-id ${d.vlanId} l3-interface irb.${d.vlanId}\n`;
+            s += `set interfaces ge-0/0/0 unit 0 family ethernet-switching interface-mode trunk vlan members ${d.vlanId}\n`;
+            s += `# Set physical interface to match your sub-interface; use irb for L3\n`;
+            break;
+        case 'ipv6_roas':
+            s += `set interfaces irb unit ${d.vlanId} family inet6 address ${d.ipv6Address}\n`;
+            s += `set vlans vlan${d.vlanId} vlan-id ${d.vlanId} l3-interface irb.${d.vlanId}\n`;
+            s += `set interfaces ge-0/0/0 unit 0 family ethernet-switching interface-mode trunk vlan members ${d.vlanId}\n`;
+            break;
+        case 'nat_pat':
+            s += `set security nat source rule-set PAT from zone trust\n`;
+            s += `set security nat source rule-set PAT to zone untrust\n`;
+            s += `set security nat source rule-set PAT rule 1 match source-address ${d.insideNetwork}\n`;
+            s += `set security nat source rule-set PAT rule 1 then source-nat interface\n`;
+            s += `set security zones security-zone trust interfaces ${d.insideInterface}\n`;
+            s += `set security zones security-zone untrust interfaces ${d.outsideInterface}\n`;
+            s += `# SRX/MX style; adjust zones and rule-set name as needed\n`;
+            break;
         case 'gre':
+            var grePrefix = (d.tunnelMask === '255.255.255.252') ? '30' : (d.tunnelMask === '255.255.255.0') ? '24' : (/^\d+$/.test(d.tunnelMask) ? d.tunnelMask : '30');
             s += `set interfaces gr-0/0/0 unit ${d.tunnelId} tunnel source ${d.sourceIp}\n`;
             s += `set interfaces gr-0/0/0 unit ${d.tunnelId} tunnel destination ${d.destIp}\n`;
-            s += `set interfaces gr-0/0/0 unit ${d.tunnelId} family inet address ${d.tunnelIp}/${d.tunnelMask}\n`;
+            s += `set interfaces gr-0/0/0 unit ${d.tunnelId} family inet address ${d.tunnelIp}/${grePrefix}\n`;
             break;
         case 'ipsec_vpn':
             s += `set security ike proposal IKE_PROP authentication-method pre-shared-keys\n`;
